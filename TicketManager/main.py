@@ -1,5 +1,8 @@
 import tkinter as tk
 from ticket import Ticket
+from database import crea_database, inserisci_ticket
+
+crea_database()
 
 root = tk.Tk() #Crea l'oggetto root della classe tk (finestra vuota grigia)
 
@@ -8,6 +11,22 @@ root.title("Ticket Manager by Lele") #Inserisce il titolo in alto nella finestra
 root.geometry("800x500") #Stabilisce le dimensioni della finestra
 
 def apri_finestra_ticket():
+
+    def salva_ticket():
+            titolo = titolo_entry.get()
+            descrizione = descrizione_entry.get()
+            priorita = priorita_var.get()
+            categoria = categoria_var.get()
+            stato_aperto = stato_var.get()
+            inserisci_ticket(
+                titolo, 
+                descrizione, 
+                priorita, 
+                categoria, 
+                stato_aperto            
+        )
+            print("Salvato nel database")
+
     finestra_ticket = tk.Toplevel(root)
 
     finestra_ticket.title("Crea Ticket")
@@ -84,6 +103,18 @@ def apri_finestra_ticket():
 
     stato_check.pack(pady=(15, 5))
 
+    create_ticket = tk.Button(
+        finestra_ticket,
+        text="Crea",
+        font=("Arial", 14),
+        width=20,
+        command=salva_ticket
+    )
+
+    create_ticket.pack(pady=10)
+
+    
+
 #Crea l'oggeto title_lable dalla classe tk.Label (testo)
 
 title_label = tk.Label( 
@@ -96,7 +127,7 @@ title_label.pack(pady=30) #La rende visibile e assegna l'interlinea sopra e sott
 
 #Crea l'oggeto create_ticket_button dalla classe tk.Label (testo)
 
-create_ticket_button = tk.Button ( 
+create_ticket_button = tk.Button( 
     root,
     text="Crea Ticket",
     font=("Arial", 14),
