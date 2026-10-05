@@ -20,20 +20,23 @@ class CambiaAnimale:
 
 
 
-tipo = "pesce"
+#tipo = "pesce"
 
-animale1 = Animale(tipo = tipo)
+#animale1 = Animale(tipo = tipo)
 
 
-cambiatore = CambiaAnimale(animale1)
+#cambiatore = CambiaAnimale(animale1)
 
-print(animale1.tipo)
+#print(animale1.tipo)
 
-cambiatore.cambio_tipo("cane")
+#cambiatore.cambio_tipo("cane")
 
-print(animale1.tipo)
+#print(animale1.tipo)
 
-print(tipo)
+#print(tipo)
 
+animale = Animale(tipo="pesce")
+
+print(animale.tipo)
 
 
