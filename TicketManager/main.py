@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 from ticket import Ticket
-from database import crea_database, inserisci_ticket, salva_ticket, leggi_ticket
+from database import crea_database, inserisci_ticket, salva_ticket, leggi_ticket, leggi_ticket_filtrati
 
 crea_database()
 
@@ -145,6 +145,104 @@ def apri_finestra_visualizza_ticket():
       finestra_visualizza = tk.Toplevel(root)
 
       finestra_visualizza.geometry("1000x500")
+
+      filtra_label = tk.Label(
+                  finestra_visualizza,
+                  text="FILTRA",
+                  font=("Arial", 10)
+      
+            )
+      
+            
+      
+      filtra_label.pack(pady=(15,5))
+
+      priorita_filtro_var = tk.StringVar(value= "Tutte")
+
+      filtra_label_priorita = tk.Label(
+                        finestra_visualizza,
+                        text="Priorità",
+                        font=("Arial", 10)
+            
+                  )
+      filtra_label_priorita.pack()
+      
+      priorita_filtro_menu = tk.OptionMenu(
+            finestra_visualizza,
+            priorita_filtro_var,
+            "Tutte",
+            "Alta",
+            "Media",
+            "Bassa"
+      )
+
+      priorita_filtro_menu.pack()
+
+      stato_filtro_var = tk.StringVar(value= "Tutti")
+
+      filtra_label_stato = tk.Label(
+                        finestra_visualizza,
+                        text="Stato",
+                        font=("Arial", 10)
+            
+                  )
+      
+      filtra_label_stato.pack()
+
+      stato_filtro_menu = tk.OptionMenu(
+            finestra_visualizza,
+            stato_filtro_var,
+            "Tutti",
+            "Aperto",
+            "Chiuso"
+      )
+
+      stato_filtro_menu.pack()
+
+      def applica_filtri():
+            priorita = priorita_filtro_var.get()
+            stato = stato_filtro_var.get()
+
+            tickets = leggi_ticket_filtrati(priorita, stato)
+
+            for riga in tabella.get_children():
+                  tabella.delete(riga)
+
+            for ticket in tickets:
+                  if ticket[5]:
+                        stato_testo = "Aperto"
+                        tag_stato = "aperto"
+                  else:
+                        stato_testo = "Chiuso"
+                        tag_stato = "chiuso"
+
+                  tabella.insert(
+                        "",
+                        tk.END,
+                        values=(
+                              ticket[0],
+                              ticket[1],
+                              ticket[2],
+                              ticket[3],
+                              ticket[4],
+                              stato_testo
+
+                        ),
+                        tags = (tag_stato,)
+                  )
+      
+      
+      
+
+      filtra_button = tk.Button(
+            finestra_visualizza,
+            text="Filtra",
+            command= applica_filtri
+      )
+
+      filtra_button.pack(pady=10)
+
+
 
       colonne = (
             "id",

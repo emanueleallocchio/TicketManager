@@ -96,4 +96,46 @@ def salva_ticket(titolo, descrizione, priorita, categoria, stato):
             categoria.set("Scegli")
             stato.set(True)
 
+
+def leggi_ticket_filtrati(priorita, stato):
+      conn=sqlite3.connect("ticket_manager.db")
+      cursor = conn.cursor()
+
+      query = """
+        SELECT id, titolo, descrizione, priorita, categoria, stato_aperto
+        FROM tickets
+        WHERE 1=1
+        """
+
+      parametri = []
+
+      if priorita != "Tutte":
+            query += "AND priorita = ?"
+            parametri.append(priorita)
+
+      
+      if stato != "Tutti":
+
+        query += "AND stato_aperto = ?"
+        
+        if stato == "Aperto":             
+             parametri.append(1)
+        else:
+             parametri.append(0)
+
+      cursor.execute(query, parametri)
+      
+      tickets = cursor.fetchall()
+      
+      conn.close()
+      
+      return tickets
+
+
+
+
+
+
+      
+
     
