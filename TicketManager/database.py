@@ -120,7 +120,7 @@ def leggi_ticket_filtrati(titolo, priorita, stato):
 
                 )
            """
-           parola= titolo.strip()
+           parola = titolo.strip()
            parametri.append(parola)
            parametri.append(parola + " %")
            parametri.append("% " + parola)

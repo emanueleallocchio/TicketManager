@@ -157,44 +157,79 @@ def apri_finestra_visualizza_ticket():
       finestra_visualizza.title("Visualizza Ticket")
       
       finestra_visualizza.transient(root)
+      
       finestra_visualizza.grab_set()
 
-      filtra_label = tk.Label(
-                  finestra_visualizza,
-                  text="FILTRA",
-                  font=("Arial", 10)
+      filtri_visibili = False
+
+      frame_filtri = tk.Frame(finestra_visualizza)
       
-            )
-      
+      def mostra_filtri():
+                        nonlocal filtri_visibili
             
+                        if filtri_visibili:
+                              frame_filtri.pack_forget()
+                              filtri_visibili = False
+                              mostra_filtri_button.config(text = "Mostra Filtri")
       
-      filtra_label.pack(pady=(15,5))
+                        else:
+                               frame_filtri.pack(pady=10, before= tabella)
+                               filtri_visibili = True
+                               mostra_filtri_button.config(text= "Nascondi Filtri")
+                               
+                        
+
+      
+      mostra_filtri_button = tk.Button(finestra_visualizza, text = "Mostra Filtri", command = mostra_filtri)
+
+      mostra_filtri_button.pack(pady=10)
+   
+
+      
+
 
       filtra_label_titolo = tk.Label(
-                              finestra_visualizza,
-                              text="Titolo",
-                              font=("Arial", 10)
+             
+            frame_filtri,
+            text="Titolo",
+            font=("Arial", 10)
                   
                         )
 
-      filtra_label_titolo.pack()
+      filtra_label_titolo.grid(
+            row=0,
+            column=0,
+            padx=5,
+            pady=5
+      )
 
-      titolo_filtro_entry = tk.Entry(finestra_visualizza, width=30)
+      titolo_filtro_entry = tk.Entry(frame_filtri, width=30)
       
-      titolo_filtro_entry.pack()
+      titolo_filtro_entry.grid(
+            row=0,
+            column=1,
+            padx=5,
+            pady=5
+             
+      )
 
       priorita_filtro_var = tk.StringVar(value= "Tutte")
 
       filtra_label_priorita = tk.Label(
-                        finestra_visualizza,
-                        text="Priorità",
-                        font=("Arial", 10)
+            frame_filtri,
+            text="Priorità",
+            font=("Arial", 10)
             
                   )
-      filtra_label_priorita.pack()
+      filtra_label_priorita.grid(
+             row=0,
+             column=2,
+             padx=5,
+             pady=5
+      )
       
       priorita_filtro_menu = tk.OptionMenu(
-            finestra_visualizza,
+            frame_filtri,
             priorita_filtro_var,
             "Tutte",
             "Alta",
@@ -202,28 +237,43 @@ def apri_finestra_visualizza_ticket():
             "Bassa"
       )
 
-      priorita_filtro_menu.pack()
+      priorita_filtro_menu.grid(
+             row=0,
+             column=3,
+             padx=5,
+             pady=5
+      )
 
       stato_filtro_var = tk.StringVar(value= "Tutti")
 
       filtra_label_stato = tk.Label(
-                        finestra_visualizza,
-                        text="Stato",
-                        font=("Arial", 10)
+            frame_filtri,
+            text="Stato",
+            font=("Arial", 10)
             
                   )
       
-      filtra_label_stato.pack()
+      filtra_label_stato.grid(
+             row=0,
+             column=4,
+             padx=5,
+             pady=5
+      )
 
       stato_filtro_menu = tk.OptionMenu(
-            finestra_visualizza,
+            frame_filtri,
             stato_filtro_var,
             "Tutti",
             "Aperto",
             "Chiuso"
       )
 
-      stato_filtro_menu.pack()
+      stato_filtro_menu.grid(
+             row=0,
+             column=5,
+             padx=5,
+             pady=5
+      )
 
       def applica_filtri():
             titolo = titolo_filtro_entry.get()
@@ -262,12 +312,17 @@ def apri_finestra_visualizza_ticket():
       
 
       filtra_button = tk.Button(
-            finestra_visualizza,
+            frame_filtri,
             text="Filtra",
             command= applica_filtri
       )
 
-      filtra_button.pack(pady=10)
+      filtra_button.grid(
+             row=0,
+             column=6,
+             padx=5,
+             pady=5
+      )
 
 
 
