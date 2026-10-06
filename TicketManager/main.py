@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
-from ticket import Ticket
 from database import crea_database, inserisci_ticket, salva_ticket, leggi_ticket, leggi_ticket_filtrati
 
 crea_database()
@@ -157,6 +156,19 @@ def apri_finestra_visualizza_ticket():
       
       filtra_label.pack(pady=(15,5))
 
+      filtra_label_titolo = tk.Label(
+                              finestra_visualizza,
+                              text="Titolo",
+                              font=("Arial", 10)
+                  
+                        )
+
+      filtra_label_titolo.pack()
+
+      titolo_filtro_entry = tk.Entry(finestra_visualizza, width=30)
+      
+      titolo_filtro_entry.pack()
+
       priorita_filtro_var = tk.StringVar(value= "Tutte")
 
       filtra_label_priorita = tk.Label(
@@ -200,10 +212,11 @@ def apri_finestra_visualizza_ticket():
       stato_filtro_menu.pack()
 
       def applica_filtri():
+            titolo = titolo_filtro_entry.get()
             priorita = priorita_filtro_var.get()
             stato = stato_filtro_var.get()
 
-            tickets = leggi_ticket_filtrati(priorita, stato)
+            tickets = leggi_ticket_filtrati(titolo, priorita, stato)
 
             for riga in tabella.get_children():
                   tabella.delete(riga)

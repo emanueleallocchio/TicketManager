@@ -97,7 +97,7 @@ def salva_ticket(titolo, descrizione, priorita, categoria, stato):
             stato.set(True)
 
 
-def leggi_ticket_filtrati(priorita, stato):
+def leggi_ticket_filtrati(titolo, priorita, stato):
       conn=sqlite3.connect("ticket_manager.db")
       cursor = conn.cursor()
 
@@ -108,6 +108,10 @@ def leggi_ticket_filtrati(priorita, stato):
         """
 
       parametri = []
+
+      if titolo.strip() != "":
+           query += "AND titolo = ?"
+           parametri.append(titolo)
 
       if priorita != "Tutte":
             query += "AND priorita = ?"
