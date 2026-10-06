@@ -110,8 +110,21 @@ def leggi_ticket_filtrati(titolo, priorita, stato):
       parametri = []
 
       if titolo.strip() != "":
-           query += "AND titolo = ?"
-           parametri.append(titolo)
+           query += """
+            AND 
+                (titolo = ? COLLATE NOCASE
+                 OR titolo LIKE ? COLLATE NOCASE
+                 OR titolo LIKE ? COLLATE NOCASE
+                 OR titolo LIKE ? COLLATE NOCASE
+
+
+                )
+           """
+           parola= titolo.strip()
+           parametri.append(parola)
+           parametri.append(parola + " %")
+           parametri.append("% " + parola)
+           parametri.append("% " + parola + " %")
 
       if priorita != "Tutte":
             query += "AND priorita = ?"

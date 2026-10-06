@@ -11,6 +11,7 @@ root.title("Ticket Manager by Emanuele Allocchio") #Inserisce il titolo in alto 
 root.geometry("800x500") #Stabilisce le dimensioni della finestra
 
 def apri_finestra_ticket():
+    
 
     
     def salva_ticket():
@@ -56,9 +57,16 @@ def apri_finestra_ticket():
 
 
 
+    
     finestra_ticket.title("Crea Ticket")
+    
     finestra_ticket.geometry("500x600")
 
+    finestra_ticket.transient(root)
+    
+    finestra_ticket.grab_set()
+    
+    
     titolo_label = tk.Label(finestra_ticket, text="Titolo")
     titolo_label.pack(pady=(20, 5))
 
@@ -141,9 +149,15 @@ def apri_finestra_ticket():
     create_ticket.pack(pady=10)
 
 def apri_finestra_visualizza_ticket():
+      
       finestra_visualizza = tk.Toplevel(root)
 
       finestra_visualizza.geometry("1000x500")
+
+      finestra_visualizza.title("Visualizza Ticket")
+      
+      finestra_visualizza.transient(root)
+      finestra_visualizza.grab_set()
 
       filtra_label = tk.Label(
                   finestra_visualizza,
