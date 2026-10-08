@@ -150,6 +150,38 @@ def leggi_ticket_filtrati(titolo, priorita, stato):
 
 
 
+def modifica_ticket(id_ticket, titolo, descrizione, priorita, categoria, stato):
+
+     conn=sqlite3.connect("ticket_manager.db")
+     cursor = conn.cursor()
+
+     cursor.execute("""
+            UPDATE tickets
+            SET titolo = ?,
+                descrizione = ?,
+                priorita = ?,
+                categoria = ?,
+                stato_aperto = ?
+            WHERE id = ?
+
+
+          """,(
+             titolo,
+             descrizione,
+             priorita,
+             categoria,
+             stato,
+             id_ticket
+
+        )
+        )
+     conn.commit()
+     conn.close()
+
+     
+
+
+
 
 
 

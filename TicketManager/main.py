@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
-from database import crea_database, inserisci_ticket, salva_ticket, leggi_ticket, leggi_ticket_filtrati
+from database import crea_database, inserisci_ticket, salva_ticket, leggi_ticket, leggi_ticket_filtrati, modifica_ticket
 
 crea_database()
 
@@ -111,6 +111,7 @@ def apri_finestra_ticket():
     ]
 
     categoria_label = tk.Label(finestra_ticket, text="Categoria")
+    
     categoria_label.pack(pady=(15, 5))
 
     #Creazione della stringa per la categoria scelta e la si imposta ad un valore di default
@@ -152,7 +153,7 @@ def apri_finestra_visualizza_ticket():
       
       finestra_visualizza = tk.Toplevel(root)
 
-      finestra_visualizza.geometry("1000x500")
+      finestra_visualizza.geometry("1300x500")
 
       finestra_visualizza.title("Visualizza Ticket")
       
@@ -173,7 +174,7 @@ def apri_finestra_visualizza_ticket():
                               mostra_filtri_button.config(text = "Mostra Filtri")
       
                         else:
-                               frame_filtri.pack(pady=10, before= tabella)
+                               frame_filtri.pack(pady=10, before= tabella, anchor="w")
                                filtri_visibili = True
                                mostra_filtri_button.config(text= "Nascondi Filtri")
                                
@@ -182,7 +183,10 @@ def apri_finestra_visualizza_ticket():
       
       mostra_filtri_button = tk.Button(finestra_visualizza, text = "Mostra Filtri", command = mostra_filtri)
 
-      mostra_filtri_button.pack(pady=10)
+      mostra_filtri_button.pack(pady=10, anchor="w",padx=20, fill="x")
+
+
+
    
 
       
@@ -302,7 +306,8 @@ def apri_finestra_visualizza_ticket():
                               ticket[2],
                               ticket[3],
                               ticket[4],
-                              stato_testo
+                              stato_testo,
+                              "🖉"
 
                         ),
                         tags = (tag_stato,)
@@ -317,11 +322,13 @@ def apri_finestra_visualizza_ticket():
             command= applica_filtri
       )
 
+      
+
       filtra_button.grid(
              row=0,
-             column=6,
-             padx=5,
-             pady=5
+             column=7,
+             padx=30,
+             pady=10             
       )
 
 
@@ -332,8 +339,10 @@ def apri_finestra_visualizza_ticket():
             "descrizione",
             "priorita",
             "categoria",
-            "stato"
+            "stato",
+            "modifica"
       )
+
 
       tabella = ttk.Treeview(
             finestra_visualizza,
@@ -347,9 +356,12 @@ def apri_finestra_visualizza_ticket():
       tabella.heading("priorita", text="Priorità")
       tabella.heading("categoria", text="Categoria")
       tabella.heading("stato", text="Stato")
+      tabella.heading("modifica", text="")
 
       tabella.column("id", width=50, anchor="center")
       tabella.column("titolo", width=150)
+      tabella.column("modifica", width=50, anchor="center")
+      
 
       tabella.tag_configure("aperto", background="lightgreen")
       tabella.tag_configure("chiuso", background="lightcoral")
@@ -364,29 +376,204 @@ def apri_finestra_visualizza_ticket():
 
       )
 
-      tickets = leggi_ticket()
+      
+      def stampa_ticket():
+            for riga in tabella.get_children():
+                    tabella.delete(riga)
+            tickets = leggi_ticket()
+      
+            for ticket in tickets:         
 
-      for ticket in tickets:
-            if ticket[5]:
-                  stato="Aperto"
-                  tag_stato="aperto"
-            else:
-                  stato="Chiuso"
-                  tag_stato="chiuso"
+            
+                  if ticket[5]:
+                        stato="Aperto"
+                        tag_stato="aperto"
+                  else:
+                        stato="Chiuso"
+                        tag_stato="chiuso"
 
-            tabella.insert(
-                  "",
-                  tk.END,
-                  values=(
-                        ticket[0],  #ID
-                        ticket[1],  #Titolo
-                        ticket[2],  #Descrizione
-                        ticket[3],  #Priorità
-                        ticket[4],  #Categoria
-                        stato
-                  ),
-                  tags=(tag_stato,)
+                  tabella.insert(
+                        "",
+                        tk.END,
+                        values=(
+                              ticket[0],  #ID
+                              ticket[1],  #Titolo
+                              ticket[2],  #Descrizione
+                              ticket[3],  #Priorità
+                              ticket[4],  #Categoria
+                              stato,
+                              "🖉"
+                        
+                        ),
+                        tags=(tag_stato,)
             )
+      stampa_ticket()
+
+            
+
+      def click_tabella(event):                       #Creiamo una funzione che verra chiamata da tabella.bind
+             colonna = tabella.identify_column(event.x)
+             riga = tabella.identify_row(event.y)
+             dati = tabella.item(riga, "values")
+
+             if colonna == "#7" and riga:
+                  dati = tabella.item(riga, "values")
+                  id = dati[0]
+                  titolo = dati[1]
+                  descrizione = dati[2]
+                  priorita = dati[3]
+                  categoria = dati[4]
+                  stato = dati[5]
+                          
+                  finestra_modifica = tk.Toplevel(finestra_visualizza)
+                  finestra_modifica.title("Modifica Ticket")
+                  finestra_modifica.geometry("500x600")
+                  finestra_modifica.transient(finestra_visualizza)
+                  finestra_modifica.grab_set()
+
+                  titolo_label = tk.Label(finestra_modifica, text="Titolo")
+                  titolo_label.pack(pady=(20, 5))
+                          
+                  titolo_entry = tk.Entry(finestra_modifica, width=40)
+                  titolo_entry.pack()
+                          
+                  descrizione_label = tk.Label(finestra_modifica, text="Descrizione")
+                  descrizione_label.pack(pady=(15, 5))
+                          
+                  descrizione_entry = tk.Entry(finestra_modifica, width=40)
+                  descrizione_entry.pack()
+                          
+                  priorità_label = tk.Label(finestra_modifica, text="Priorità")
+                  priorità_label.pack(pady=(15, 5))
+                          
+                  priorita_var = tk.StringVar()
+                  priorita_var.set(priorita)
+                          
+                  priorita_opzioni = [
+                                  "Alta",
+                                  "Normale",
+                                  "Bassa"
+                              ]
+                          
+                  priorita_menu = tk.OptionMenu(
+                                  finestra_modifica, 
+                                  priorita_var,
+                                  *priorita_opzioni
+                              )
+                          
+                  priorita_menu.pack()
+                          
+                              
+                  categorie_opzioni = [
+                                  "Hardware",
+                                  "Software",
+                                  "Rete",
+                                  "Account/Accessi",
+                                  "Altro"
+                          
+                              ]
+                          
+                  categoria_label = tk.Label(finestra_modifica, text="Categoria")
+                              
+                  categoria_label.pack(pady=(15, 5))
+                          
+                          
+                          
+                  categoria_var = tk.StringVar()
+                  categoria_var.set(categoria)
+                          
+                          
+                          
+                  categoria_menu = tk.OptionMenu(
+                                  finestra_modifica,
+                                  categoria_var,
+                                  *categorie_opzioni
+                              )
+                          
+                  categoria_menu.pack()
+
+                  stato_var = tk.BooleanVar(
+                                 master=finestra_modifica,
+                                 value=(stato == "Aperto")
+                              )
+
+                  finestra_modifica.stato_var = stato_var
+
+                  stato_check = tk.Checkbutton(
+                                    finestra_modifica,
+                                    text="Ticket aperto",
+                                    variable = finestra_modifica.stato_var
+                              )
+
+                                                    
+                  if stato == "Aperto":
+                              stato_var.set(True)
+                  else:
+                              stato_var.set(False)
+                              
+                          
+                          
+                          
+                  stato_check.pack(pady=(15, 5))
+
+                  titolo_entry.insert(0, titolo)
+                  descrizione_entry.insert(0, descrizione)
+
+                  
+
+                  def salva_modifiche():
+                          nuovo_titolo = titolo_entry.get()
+                          nuova_descrizione = descrizione_entry.get()
+                          nuova_priorita = priorita_var.get()
+                          nuova_categoria = categoria_var.get()
+                          nuovo_stato = finestra_modifica.stato_var.get()
+
+                          
+
+                          modifica_ticket(
+                                  id,                                    
+                                  nuovo_titolo,
+                                  nuova_descrizione,
+                                  nuova_priorita,
+                                  nuova_categoria,
+                                  nuovo_stato
+                              
+                          )
+                          stampa_ticket(),
+                          finestra_modifica.destroy()
+
+                  salva_modifiche_button = tk.Button(
+                          finestra_modifica,
+                          text="Salva Modifiche",
+                          command=salva_modifiche
+                  )
+
+                  salva_modifiche_button.pack(pady=10)
+
+
+
+
+
+      def cambia_cursore(event):
+                   
+            colonna=tabella.identify_column(event.x)
+            riga=tabella.identify_row(event.y)
+
+            if colonna == "#7" and riga:
+                          tabella.config(cursor="hand2")
+            else:
+                          tabella.config(cursor="")                  
+      
+
+
+
+      tabella.bind("<Button-1>", click_tabella) #tabella.bind crea un evento e.g. evento = Event() con tutte le informazioni dell'evento del click
+                                                      #e poi esegue click_tabelle(evento)
+
+      tabella.bind("<Motion>", cambia_cursore)
+
+
+      
 
 
 
