@@ -87,7 +87,7 @@ def apri_finestra_ticket():
 
     priorita = [
         "Alta",
-        "Normale",
+        "Media",
         "Bassa"
     ]
 
@@ -279,6 +279,8 @@ def apri_finestra_visualizza_ticket():
              pady=5
       )
 
+      
+
       def applica_filtri():
             titolo = titolo_filtro_entry.get()
             priorita = priorita_filtro_var.get()
@@ -312,6 +314,18 @@ def apri_finestra_visualizza_ticket():
                         ),
                         tags = (tag_stato,)
                   )
+
+      def resetta_filtri():
+              
+              titolo_filtro_entry.insert(0,"")
+              
+              priorita_filtro_var.set("Tutte")
+              
+              stato_filtro_var.set("Tutti")
+
+              stampa_ticket()
+
+                            
       
       
       
@@ -329,6 +343,19 @@ def apri_finestra_visualizza_ticket():
              column=7,
              padx=30,
              pady=10             
+      )
+
+      reset_filtri_button = tk.Button(
+                    frame_filtri,
+                    text="Resetta Filtri",
+                    command= resetta_filtri
+            )
+      
+      reset_filtri_button.grid(
+              row=0,
+              column=8,
+              padx=3,
+              pady=10
       )
 
 
@@ -407,6 +434,7 @@ def apri_finestra_visualizza_ticket():
                         ),
                         tags=(tag_stato,)
             )
+      
       stampa_ticket()
 
             
@@ -451,7 +479,7 @@ def apri_finestra_visualizza_ticket():
                           
                   priorita_opzioni = [
                                   "Alta",
-                                  "Normale",
+                                  "Media",
                                   "Bassa"
                               ]
                           
@@ -528,6 +556,18 @@ def apri_finestra_visualizza_ticket():
                           nuova_categoria = categoria_var.get()
                           nuovo_stato = finestra_modifica.stato_var.get()
 
+
+                          if (
+                              nuovo_titolo.strip() == ""
+                              or nuova_descrizione.strip() == ""
+                              ):
+                                            
+                              messagebox.showerror(
+                                    "Errore",
+                                    "Compila tutti i campi per inserire il ticket"
+                                            )
+                              return
+
                           
 
                           modifica_ticket(
@@ -540,6 +580,13 @@ def apri_finestra_visualizza_ticket():
                               
                           )
                           stampa_ticket(),
+
+                          messagebox.showinfo(
+                                  "Corretto",
+                                  "Ticket Modificato"
+                          )
+
+
                           finestra_modifica.destroy()
 
                   salva_modifiche_button = tk.Button(
