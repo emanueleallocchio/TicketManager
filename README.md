@@ -46,6 +46,10 @@ Through this project I practiced:
 - Separating GUI logic from database operations
 - Git version control
 
+## Download
+
+A standalone Windows executable is available in the [Releases](../../releases) section.
+
 ## Screenshots
 
 Screenshots of the application will be added here.

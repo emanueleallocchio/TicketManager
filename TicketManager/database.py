@@ -182,19 +182,20 @@ def modifica_ticket(id_ticket, titolo, descrizione, priorita, categoria, stato):
 
 
 
-def elimina_ticket(id_ticket):
-     conn = sqlite3.connect("ticket_manager.db")
-     cursor = conn.cursor()
+def elimina_ticket(ids_ticket):
+    conn = sqlite3.connect("ticket_manager.db")
+    cursor = conn.cursor()
 
-     cursor.execute("""
-        DELETE FROM tickets WHERE id = ?  
-     
-     """,
-        id_ticket
-     )
+    parametri = []
 
-     conn.commit()
-     conn.close()
-      
+    for id_ticket in ids_ticket:
+        parametri.append((id_ticket,))
 
+    cursor.executemany(
+        "DELETE FROM tickets WHERE id = ?",
+        parametri
+    )
+
+    conn.commit()
+    conn.close()
     
