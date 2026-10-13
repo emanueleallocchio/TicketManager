@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
-from database import crea_database, inserisci_ticket, salva_ticket, leggi_ticket, leggi_ticket_filtrati, modifica_ticket
+from database import crea_database, inserisci_ticket, salva_ticket, leggi_ticket, leggi_ticket_filtrati, modifica_ticket, elimina_ticket
 
 crea_database()
 
@@ -402,6 +402,54 @@ def apri_finestra_visualizza_ticket():
             pady=20
 
       )
+
+      frame_azioni = tk.Frame(finestra_visualizza)
+      frame_azioni.pack(fill="x", padx=20, pady=(0,10))
+
+
+      def elimina_ticket_selezionati():
+              selezione = tabella.selection()   #salva nella variabile gli ID che la Treeview da alle righe
+
+              if not selezione:
+                      messagebox.showwarning(
+                              "Attenzione",
+                              "Seleziona almeno un ticket da eliminare"
+                      )
+                      return
+
+              ids_ticket = []
+
+              for riga in selezione:
+                      dati = tabella.item(riga, "values")
+                      ids_ticket.append(dati[0])
+
+              conferma = messagebox.askyesno(
+                      "Conferma eliminazione",
+                      f"Vuoi eliminare {len(ids_ticket)} ticket?"
+              )
+
+              if not conferma:
+                      return
+
+              for id_ticket in ids_ticket:
+                      elimina_ticket(ids_ticket)
+
+              eliminati = messagebox.showinfo(
+                      "Eliminati",
+                      "Ticket eliminati correttamente"
+              )
+
+              stampa_ticket()
+
+
+      elimina_button = tk.Button(
+                    frame_azioni,
+                    text="Elimina selezionati",
+                    command= elimina_ticket_selezionati
+                    
+            )
+      
+      elimina_button.pack(side="right")
 
       
       def stampa_ticket():
